@@ -63,7 +63,7 @@ parser.add_argument('--version', type=str, default='2020.1',
                     choices=['2020.1'],
                     help='Version of GROMACS to build')
 parser.add_argument('--simd', type=str, default='auto',
-                    choices=['AUTO', 'SSE2'],
+                    choices=['AUTO', 'SSE2', 'AVX_256', 'AVX2_256', 'AVX_512'],
                     help='SIMD flavour of GROMACS to build')
 
 def base_image_tag(args) -> str:
