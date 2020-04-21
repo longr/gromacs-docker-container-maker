@@ -125,7 +125,7 @@ def build_gmx(args):
     build_dir='build'
     cmake_command = [
         f'cmake -S . -B {build_dir}',
-        '-D CMAKE_BUILD_TYPE=Debug',
+        '-D CMAKE_BUILD_TYPE=Release',
         '-D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda',
         f'-D GMX_SIMD={args.simd}',
         '-D GMX_BUILD_OWN_FFTW=ON',
