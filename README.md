@@ -10,7 +10,9 @@ The build-all-dockerfiles.sh file controls which build
 configurations are built, but calling the build-dockerfiles.py file
 repeatedly for the different configurations.
 Edit the latter to change how configurations are built (and see
-below), or the GROMACS version that is built.
+below), or the GROMACS version that is built. If you have
+edited the latter, then run build-all-dockerfiles.sh after
+doing so.
 
 Make a new git branch and push it to
 https://github.com/bioexcel/gromacs-docker-container-maker.
