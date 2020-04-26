@@ -122,27 +122,54 @@ def get_cmake(args):
         )
 
 def build_gmx(args):
-    build_dir='build'
-    cmake_command = [
-        f'cmake -S . -B {build_dir}',
-        '-D CMAKE_BUILD_TYPE=Release',
-        '-D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda',
-        f'-D GMX_SIMD={args.simd}',
-        '-D GMX_BUILD_OWN_FFTW=ON',
-        '-D GMX_GPU=ON',
-        '-D GMX_MPI=OFF',
-        f'-D CMAKE_INSTALL_PREFIX=/gromacs/bin.{args.simd}',
-        #'-D GMX_PREFER_STATIC_LIBS=ON',
-        #'-D MPIEXEC_PREFLAGS=--allow-run-as-root'
-        '-D GMX_OPENMP=ON',]
+    source_dir = '.'
+    build_dir = 'build'
+    install_dir = f'/gromacs/bin.{args.simd}'
+    cmake_command = (
+        f'cmake -S {source_dir} -B {build_dir} '
+        f'-D CMAKE_BUILD_TYPE=Release '
+        f'-D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda '
+        f'-D GMX_SIMD={args.simd} '
+        f'-D GMX_BUILD_OWN_FFTW=ON '
+        f'-D GMX_GPU=ON '
+        f'-D GMX_MPI=OFF '
+        f'-D CMAKE_INSTALL_PREFIX={install_dir} '
+        #f'-D GMX_PREFER_STATIC_LIBS=ON '
+        #f'-D MPIEXEC_PREFLAGS=--allow-run-as-root '
+        f'-D GMX_OPENMP=ON ' )
+    build_command = [f'mkdir -p {build_dir}',
+                     cmake_command,
+                     # This repeat run of cmake works around a bug
+                     # where the second run of cmake updates config.h
+                     # in a way that triggers a re-build of many
+                     # source files.
+                     f'cmake -S {source_dir} -B {build_dir}',
+                     f'cmake --build {build_dir} --target all -- -j2']
+    install_command = [f'cmake --install {build_dir}']
+    # TODO add some basic testing to run on Docker Hub
+    if args.simd == "AVX_512":
+        # Build the program to identify number of AVX-512 FMA units on
+        # an execution host capable of AVX-512 instructions. The
+        # caller is responsible for determing whether the host is
+        # AVX-512 capable, or accepting that this program will fail
+        # when executing an illegal instruction. The reason for this
+        # program is that if there are dual AVX-512 FMA units, it will
+        # be faster to use AVX-512 SIMD, but if there's only a single
+        # FMA unit, GROMACS runs faster with AVX2_256 SIMD. This
+        # cannot be detected from CPUID bits.
+        identify_avx_512_fma_units_command = (
+            f'g++ -O3 -mavx512f -std=c++11 '
+            f'-D GMX_IDENTIFY_AVX512_FMA_UNITS_STANDALONE=1 '
+            f'-D GMX_X86_GCC_INLINE_ASM=1 '
+            f'-D SIMD_AVX_512_CXX_SUPPORTED=1 '
+            f'{source_dir}/src/gromacs/hardware/identifyavx512fmaunits.cpp '
+            f'-o {build_dir}/bin/identifyavx512fmaunits' )
+        build_command.append(identify_avx_512_fma_units_command)
+        install_command.append(f'cp {build_dir}/bin/identifyavx512fmaunits {install_dir}/bin')
     gmx = hpccm.building_blocks.generic_build(
-        build=[f'mkdir -p {build_dir}',
-               ' '.join(cmake_command),
-               f'cmake -S . -B {build_dir}',
-               f'cmake --build {build_dir} --target all -- -j2'],
-        install=[f'cmake --install {build_dir}'],
-        url=f'ftp://ftp.gromacs.org/pub/gromacs/gromacs-{args.version}.tar.gz'
-    )
+        build=build_command,
+        install=install_command,
+        url=f'ftp://ftp.gromacs.org/pub/gromacs/gromacs-{args.version}.tar.gz',)
     return gmx
 
 def build_stages(args) -> typing.Iterable[hpccm.Stage]:
