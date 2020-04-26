@@ -136,7 +136,8 @@ def build_gmx(args):
         f'-D CMAKE_INSTALL_PREFIX={install_dir} '
         #f'-D GMX_PREFER_STATIC_LIBS=ON '
         #f'-D MPIEXEC_PREFLAGS=--allow-run-as-root '
-        f'-D GMX_OPENMP=ON ' )
+        f'-D GMX_OPENMP=ON '
+        f'-G Ninja' )
     build_command = [f'mkdir -p {build_dir}',
                      cmake_command,
                      # This repeat run of cmake works around a bug
