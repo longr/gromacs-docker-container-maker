@@ -37,7 +37,7 @@ RUN mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp ftp://ft
     mkdir -p /var/tmp && tar -x -f /var/tmp/gromacs-2020.1.tar.gz -C /var/tmp -z && \
     cd /var/tmp/gromacs-2020.1 && \
     mkdir -p build && \
-    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -D GMX_SIMD=SSE2 -D GMX_BUILD_OWN_FFTW=ON -D GMX_GPU=ON -D GMX_MPI=OFF -D CMAKE_INSTALL_PREFIX=/gromacs/bin.SSE2 -D GMX_OPENMP=ON  && \
+    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -D GMX_SIMD=SSE2 -D GMX_BUILD_OWN_FFTW=ON -D GMX_GPU=ON -D GMX_MPI=OFF -D CMAKE_INSTALL_PREFIX=/gromacs/bin.SSE2 -D GMX_OPENMP=ON -G Ninja && \
     cmake -S . -B build && \
     cmake --build build --target all -- -j2 && \
     cd /var/tmp/gromacs-2020.1 && \
