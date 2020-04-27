@@ -32,14 +32,21 @@ RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key
         cmake && \
     rm -rf /var/lib/apt/lists/*
 
+COPY --from=gromacs/fftw /usr/local/lib \
+    /usr/local/include \
+    /usr/local/
+
 # ftp://ftp.gromacs.org/pub/gromacs/gromacs-2020.1.tar.gz
+
 RUN mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp ftp://ftp.gromacs.org/pub/gromacs/gromacs-2020.1.tar.gz && \
     mkdir -p /var/tmp && tar -x -f /var/tmp/gromacs-2020.1.tar.gz -C /var/tmp -z && \
     cd /var/tmp/gromacs-2020.1 && \
     mkdir -p build && \
-    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -D GMX_SIMD=AVX2_256 -D GMX_BUILD_OWN_FFTW=ON -D GMX_GPU=ON -D GMX_MPI=OFF -D CMAKE_INSTALL_PREFIX=/gromacs/bin.AVX2_256 -D GMX_OPENMP=ON -G Ninja && \
+    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -D GMX_SIMD=AVX2_256 -D GMX_FFT_LIBRARY=fftw3 -D GMX_GPU=ON -D GMX_MPI=OFF -D CMAKE_INSTALL_PREFIX=/gromacs/bin.AVX2_256 -D GMX_OPENMP=ON -G Ninja && \
     cmake -S . -B build && \
     cmake --build build --target all -- -j2 && \
     cd /var/tmp/gromacs-2020.1 && \
     cmake --install build && \
     rm -rf /var/tmp/gromacs-2020.1 /var/tmp/gromacs-2020.1.tar.gz
+
+

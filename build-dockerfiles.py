@@ -122,6 +122,9 @@ def get_cmake(args):
         )
 
 def build_gmx(args):
+    # Install the FFTW dependency from Docker Hub
+    gmx = [hpccm.primitives.copy(src=['/usr/local/lib', '/usr/local/include'], dest='/usr/local', _from='gromacs/fftw')]
+    # Build and install GROMACS
     source_dir = '.'
     build_dir = 'build'
     install_dir = f'/gromacs/bin.{args.simd}'
@@ -130,11 +133,10 @@ def build_gmx(args):
         f'-D CMAKE_BUILD_TYPE=Release '
         f'-D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda '
         f'-D GMX_SIMD={args.simd} '
-        f'-D GMX_BUILD_OWN_FFTW=ON '
+        f'-D GMX_FFT_LIBRARY=fftw3 '
         f'-D GMX_GPU=ON '
         f'-D GMX_MPI=OFF '
         f'-D CMAKE_INSTALL_PREFIX={install_dir} '
-        #f'-D GMX_PREFER_STATIC_LIBS=ON '
         #f'-D MPIEXEC_PREFLAGS=--allow-run-as-root '
         f'-D GMX_OPENMP=ON '
         f'-G Ninja' )
@@ -164,10 +166,11 @@ def build_gmx(args):
             f'-D GMX_X86_GCC_INLINE_ASM=1 '
             f'-D SIMD_AVX_512_CXX_SUPPORTED=1 '
             f'{source_dir}/src/gromacs/hardware/identifyavx512fmaunits.cpp '
+
             f'-o {build_dir}/bin/identifyavx512fmaunits' )
         build_command.append(identify_avx_512_fma_units_command)
         install_command.append(f'cp {build_dir}/bin/identifyavx512fmaunits {install_dir}/bin')
-    gmx = hpccm.building_blocks.generic_build(
+    gmx += hpccm.building_blocks.generic_build(
         build=build_command,
         install=install_command,
         url=f'ftp://ftp.gromacs.org/pub/gromacs/gromacs-{args.version}.tar.gz',)
