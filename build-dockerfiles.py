@@ -49,6 +49,8 @@ _common_packages = ['build-essential',
                     'git',
                     'gnupg',
                     'libhwloc-dev',
+                    'libblas-dev',
+                    'liblapack-dev',
                     'libx11-dev',
                     'ninja-build',
                     'wget']
@@ -134,6 +136,8 @@ def build_gmx(args):
         f'-D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda '
         f'-D GMX_SIMD={args.simd} '
         f'-D GMX_FFT_LIBRARY=fftw3 '
+        f'-D GMX_EXTERNAL_BLAS=ON '
+        f'-D GMX_EXTERNAL_LAPACK=ON '
         f'-D GMX_GPU=ON '
         f'-D GMX_MPI=OFF '
         f'-D CMAKE_INSTALL_PREFIX={install_dir} '
