@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=2020.1
+version=2020.2
 
 for simd in SSE2 AVX_256 AVX2_256 AVX_512
 do
