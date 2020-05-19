@@ -1,5 +1,27 @@
 # gromacs-docker-container-maker
-Builds the containers that contribute to gromacs/gromacs on Docker Hub, as built by gromacs-docker repository
+
+
+## What does this repository contain?
+
+This repository holds the Dockerfiles and scripts needed to builds
+the containers that contribute to gromacs/gromacs on Docker Hub, as built by gromacs-docker repository.
+
+### How does it work?
+
+This is the 2nd of 3 repositories requried to build the [gromacs/gromacs container on Docker Hub](https://hub.docker.com/r/gromacs/gromacs/).  The three stages are:
+
+1. [fftw-docker](https://github.com/bioexcel/fftw-docker/), which builds the containerised fftw used by gromacs.
+2. [gromacs-docker-container-maker](https://github.com/bioexcel/gromacs-docker-container-maker, the repository we are in, which builds the individual gromacs containers.
+3. [gromacs-docker](https://github.com/bioexcel/gromacs-docker), which combines all the containers together.
+
+## Layout and functions
+
+This repository consists of 4 main files:
+
+* `build-all-dockerfiles.sh` - This controls which build configurations are built by calling the `build-dockerfiles.py` once for each of the different configurations.
+* `build-dockerfiles.sh` - This controls how each individual container is made.  This should be modified if you wish to change how the configurations are built, or which GROMACS version is used. If this is changed, `build-all-dockerfiles.sh` should be ran again.
+* `utility.py`- ?Not clear on usage?
+* `gmx-<gromacs_version>-cuda-<cuda_version>-<simd_type>` - There is one directory for each different gromacs versiona and simd type. Each contains the docker file needed to build it.
 
 ## Updating
 
