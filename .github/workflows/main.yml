@@ -1,0 +1,12 @@
+---
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  steps:
+    - uses: "actions/checkout@v2"
+    - name: Build container
+      run: docker build -f gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
