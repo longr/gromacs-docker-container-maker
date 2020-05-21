@@ -1,10 +1,16 @@
 ---
+# gmx-2020.2-cuda-10.2-SSE2
+# gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
+
 name: Test
 on: [push]
 jobs:
   build:
+    strategy:
+      matrix:
+        SIMD: ["gmx-2020.2-cuda-10.2-SSE2", "gmx-2020.2-cuda-10.2-AVX2_256"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
-      run: docker build -f gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
+      run: docker build -f ${{SIMD}}/Dockerfile .
