@@ -8,9 +8,15 @@ jobs:
   build:
     strategy:
       matrix:
-        simd: ["gmx-2020.2-cuda-10.2-SSE2", "gmx-2020.2-cuda-10.2-AVX2_256"]
+        simd: ["gmx-2020.2-cuda-10.2-AVX_256",
+               "gmx-2020.2-cuda-10.2-AVX_512",
+               "gmx-2020.2-cuda-10.2-AVX2_256",
+               "gmx-2020.2-cuda-10.2-SSE2",
+              ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
       run: docker build -f ${{matrix.simd}}/Dockerfile .
+
+
