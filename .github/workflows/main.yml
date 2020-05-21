@@ -1,14 +1,10 @@
 ---
-name: CI
-
-on:
-  push:
-    branches: ["master"]
-
+name: Test
+on: [push]
 jobs:
-  runs-on: ubuntu-latest
-
-  steps:
-  - uses: "actions/checkout@v2"
-  - name: Build container
-    run: docker build -f gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Build the Docker image
+      run: docker build -f gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
