@@ -6,7 +6,9 @@ on:
     branches: ["master"]
 
 jobs:
+  runs-on: ubuntu-latest
+
   steps:
-    - uses: "actions/checkout@v2"
-    - name: Build container
-      run: docker build -f gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
+  - uses: "actions/checkout@v2"
+  - name: Build container
+    run: docker build -f gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
