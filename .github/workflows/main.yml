@@ -17,8 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
-      run: docker build -f ${{matrix.simd}}/Dockerfile .
+      run: docker build -t "longr/gromacs-docker-container-maker:${{matrix.simd}}" -f ${{matrix.simd}}/Dockerfile .
 
+    - name: List containers
+      run: docker ps
+      
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
