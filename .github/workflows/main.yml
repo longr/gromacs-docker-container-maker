@@ -17,6 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
-      run: docker build -f ${{matrix.simd}}/Dockerfile .
-
-
+      #run: docker build -f ${{matrix.simd}}/Dockerfile .
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+      name: longr/gromacs-docker-container-maker
+      dockerfile: ${{matrix.simd}}/Dockerfile .
+      username: ${{ secrets.DOCKER_USERNAME }}
+      password: ${{ secrets.DOCKER_PASSWORD }}
+      tags: ${{matrix.simd}}
