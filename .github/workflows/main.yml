@@ -20,6 +20,12 @@ jobs:
     - name: Generate Dockerfiles
       run: bash build-all-dockerfiles.sh
 
+    - name: DEBUG
+      run: |
+        pwd
+	ls
+	tree
+	
     - name: Upload dockerfiles
       uses: actions/upload-artifact@v1
       with:
