@@ -31,7 +31,7 @@ jobs:
         name: dockerfiles
         path: gmx-2020.2-cuda-10.2-AVX2_256
         path: gmx-*
-	
+        
     
   build:
     needs: build_files
