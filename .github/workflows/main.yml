@@ -23,9 +23,9 @@ jobs:
     - name: DEBUG
       run: |
         pwd
-	ls
-	tree
-	
+        ls
+        tree
+        
     - name: Upload dockerfiles
       uses: actions/upload-artifact@v1
       with:
