@@ -23,8 +23,7 @@ jobs:
     - name: DEBUG
       run: |
         pwd
-        ls
-        tree
+        ls gmx-*
         
     - name: Upload dockerfiles
       uses: actions/upload-artifact@v1
