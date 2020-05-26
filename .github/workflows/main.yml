@@ -12,10 +12,10 @@ jobs:
     - name: Install dependencies
       run: |
         set -xe
-	python -VV
-	python -m site
-	python -m pip install --upgrade pip
-	python -m pip install argparse collections typing hpccm distutils
+        python -VV
+        python -m site
+        python -m pip install --upgrade pip
+        python -m pip install argparse collections typing hpccm distutils
 
     - name: Generate Dockerfiles
       run: bash build-all-dockerfiles.sh
@@ -24,7 +24,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: dockerfiles
-	path: gmx-*/
+        path: gmx-*/
     
   build:
     needs: build_files
