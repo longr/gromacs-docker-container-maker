@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: dockerfiles
-        path: gmx-*
+        path: gmx-2020.2-cuda-10.2-AVX2_256
         
     
   build:
