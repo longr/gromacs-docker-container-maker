@@ -47,12 +47,9 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Download Dockerfiles
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: dockerfiles
-
-    - name: Generate Dockerfiles
-      run: bash build-all-dockerfiles.sh
 
     - name: Build the Docker image
       run: docker build -t "longr/gromacs-docker:${{matrix.simd}}" -f ${{matrix.simd}}/Dockerfile .
