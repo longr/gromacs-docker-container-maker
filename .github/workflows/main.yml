@@ -1,7 +1,4 @@
 ---
-# gmx-2020.2-cuda-10.2-SSE2
-# gmx-2020.2-cuda-10.2-AVX2_256/Dockerfile .
-
 name: Test
 on: [push]
 jobs:
@@ -14,8 +11,12 @@ jobs:
                "gmx-2020.2-cuda-10.2-SSE2",
               ]
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
     - uses: actions/checkout@master
+    - name: Generate Dockerfiles
+      run: bash build-all-dockerfiles.sh
+
     - name: Build the Docker image
       run: docker build -t "longr/gromacs-docker:${{matrix.simd}}" -f ${{matrix.simd}}/Dockerfile .
 
@@ -32,6 +33,7 @@ jobs:
   combine:
     needs: build
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
